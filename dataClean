@@ -1,16 +1,68 @@
 import sqlite3
+import numpy as np
+import matplotlib.pyplot as plt
+from sqlite3 import Error
+
+database = "/Users/rebeccazuo/Desktop/DataScienceFinal/all_data.db"
+
+columns = ('idn', 'dist_size', 'urb', 'region', 'totalComputers', 'computersForInstruction', 'integration', 'training')
+
+def create_connection(db_file):
+	try:
+		conn = sqlite3.connect(db_file)
+		return conn
+	except:
+		print("ERROR: Could not create connection.")
+
+conn = create_connection(database)
+cur = conn.cursor()
+
+def create_table(conn, sql_text):
+    try:
+        print(True)
+        c = conn.cursor()
+        c.execute(create_table_sql)
+        c.close()
+    except Error as e:
+        print(e)
+
+create_table_sql = """ CREATE TABLE IF NOT EXISTS edTech (
+                    dist_size integer,
+                    urb integer,
+                    region integer,
+                    totalComputers integer NOT NULL ,
+                    computersForInstruction integer ,
+                    integration integer,
+                    training integer
+                ); """
+create_table(conn,create_table_sql)
+
+insert_sql  = """ INSERT INTO edTech(
+    dist_size ,
+    urb ,
+    region ,
+    totalComputers  ,
+    computersForInstruction  ,
+    integration ,
+    training )
+
+    VALUES(?,?,?,?,?,?,?)
+    """
+
+
+connection = create_connection(database)
+
+if connection is not None:
+    create_table(connection, database)
+else:
+    print("Not connecting")
+
+
 read_data = []
-with open('frss93.dat', 'r') as datafile:
+processed_data = []
+with open('frss92.dat', 'r') as datafile:
     for line in datafile:
         read_data.append(line)
-
-# each line has 1442 chars, 1527 lines total
-# quality measures? sum of 10-77
-# barrier measures? 80-93 (providing), 96-111 (student participation)
-# resource limitations for adding + phasing out? 118-123 (adding), 138-143 (removing)
-# all of the above aren't zero-indexed (based on key provided w dataset)
-
-processed_data = []
 
 
 def get_score(subarr):
@@ -20,16 +72,15 @@ def get_score(subarr):
             score += int(elt)
     return score
 
-nulls1 = 0
-nulls2 = 0
-nulls3 = 0
-nulls4 = 0
+def add_data(cur, arr, sql_statement):
+    cur.execute(sql_statement, arr)
+    conn.commit()
+    return cur.lastrowid
 
-add_rmv_nulls = 0
 
 for line in read_data:
 
-    idn = int(line[0:4])
+    idn = int(line[1:5])
 
     if(line[6] == "2"):
 
@@ -45,46 +96,13 @@ for line in read_data:
         training = get_score(line[154])
 
         # add to processed_data
-        dist_data = [idn, dist_size, urb, region, totalComputers, computersForInstruction, integration, training]
+        dist_data = [dist_size, urb, region, totalComputers, computersForInstruction, integration, training]
         processed_data.append(dist_data)
+        x = add_data(cur, dist_data, insert_sql)
 
 
+conn.close()
 # no nulls in data
 
-print(len(processed_data)) # = 1408
-print(len(processed_data[0]))
-
-database = "../all_data.db"
-
-def create_connection(db_file):
-    try :
-        connection = sqlite3.connect("edTech.db")
-    except Error as e:
-        print(e)
-    finally:
-        connection.close()
-
-def create_table(conn, sql_text):
-    try:
-        c = conn.cursor()
-        c.execute(create_table_sql)
-    except Error as e:
-        print(e)
-
-districtTable  = """ (
-    dist_size integer,
-    urb integer,
-    region integer,
-    totalComputers INT NOT NULL ,
-    computersForInstruction INT ,
-    integration INT,
-    training INT,
-    idn INT PRIMARY KEY
-);"""
-
-connection = create_connection(database)
-
-if connection is not None:
-    create_table()
-else:
-    print("Not connecting")
+print(len(processed_data)) # = 916
+print(len(processed_data[0])) # = 8
