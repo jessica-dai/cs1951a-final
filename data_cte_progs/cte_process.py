@@ -36,6 +36,7 @@ def add_data(cur, arr):
 
     """
     cur.execute(sql, arr)
+    conn.commit()
     return cur.lastrowid
 
 
@@ -93,7 +94,7 @@ for line in read_data:
             add_rmv_nulls += 1
 
 
-
+conn.close()
 # print(len(processed_data)) # = 1510 -- we removed 17 records
 # print(len(processed_data[0])) # = 9 -- 0: ID, 1-3: joinable attributes, 4-7: response variables
 
@@ -107,6 +108,7 @@ def create_table(conn, sql_text):
     try:
         c = conn.cursor()
         c.execute(create_table_sql)
+        c.close()
     except Error as e:
         print(e)
 
