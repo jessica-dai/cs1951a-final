@@ -30,7 +30,7 @@ def main():
 
     models = [LogisticRegression(), BernoulliNB(), MLPClassifier(), LinearSVC(), DecisionTreeClassifier()]
 
-    results = np.array([])
+    results = []
 
     for model in models:
         _, score, _ = fit_model(model)
@@ -40,11 +40,7 @@ def main():
 
     # best_model = np.argmax(results)
 
-# if __name__ == "__main__":
-#     print("hello")
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument("--dataset", type=str)
-#     args = parser.parse_args()
+if __name__ == "__main__":
 
-#     main()
+    main()
     
