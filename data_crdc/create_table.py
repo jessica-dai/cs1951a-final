@@ -23,6 +23,7 @@ def create_table(conn, sql_statement):
 create_crdc_table_sql = """ CREATE TABLE IF NOT EXISTS crdc (
 					id integer PRIMARY KEY,
 					dist_state_abbrev TEXT, 
+					dist_state_name TEXT, 
 					dist_id integer,
 					dist_name TEXT, 
 					school_id integer,
@@ -53,7 +54,8 @@ create_crdc_table_sql = """ CREATE TABLE IF NOT EXISTS crdc (
 					har_bul_race integer,
 					har_bul_dis integer,
 					har_bul_sex_o integer,
-					har_bul_rel integer
+					har_bul_rel integer,
+					region TEXT
 				); """
 
 if conn is not None:

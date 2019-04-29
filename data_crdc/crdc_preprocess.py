@@ -6,6 +6,17 @@ import csv
 import sqlite3
 import sys
 
+
+ne = ["Connecticut", "Delaware", "District of Columbia", "Maine", "Maryland", "Massachusetts", "New Hampshire", "New Jersey", "New York", "Pennsylvania", "Rhode Island", "Vermont"]
+se = ["Alabama", "Arkansas", "Florida", "Georgia", "Kentucky", "Louisiana", "Mississippi", "North Carolina", "South Carolina", "Tennessee", "Virginia", "West Virginia"]
+ce = ["Illinois", "Indiana", "Iowa", "Kansas", "Michigan", "Minnesota", "Missouri", "Nebraska", "North Dakota", "Ohio", "South Dakota", "Wisconsin"]
+we = ["Alaska", "Arizona", "California", "Colorado", "Hawaii", "Idaho", "Montana", "Nevada", "New Mexico", "Oklahoma", "Oregon", "Texas", "Utah", "Washington", "Wyoming"]
+
+ne = map(lambda x: x.upper(), ne)
+se = map(lambda x: x.upper(), se)
+ce = map(lambda x: x.upper(), ce)
+we = map(lambda x: x.upper(), we)
+
 def get_crdc_rows():
 	with open('/users/amypu/documents/Data_Files_and_Layouts/CRDC_2015-16_School_Data.csv') as data:
 		read_data = csv.reader(data)
@@ -14,12 +25,12 @@ def get_crdc_rows():
 			# only add to processed data if line[18] == Yes and line[19] == Yes and line[20] == Yes and line[21] == Yes
 			if (line[18] == "Yes") and (line[19] == "Yes") and (line[20] == "Yes") and (line[21] == "Yes"):
 				district_state_abbrev = line[0] #district state abbreviation
+				district_state_name = line[1] #district state abbreviation
 				district_id = line[2] #7 digit district id
 				district_name = line[3] #district name
 				school_id = line[4] #5 digit school id
 				school_name = line[5] #school name
 				district_and_school_id = line[6] #7 digit district and 5 digit school id
-
 				overall_enr_hisp_m = line[55] #overall student enrollment: hispanic male
 				overall_enr_hisp_f = line[56] #overall student enrollment: hispanic female
 				overall_enr_ai_an_m = line[57] #overall student enrollment: american indian/alaska native male
@@ -41,7 +52,7 @@ def get_crdc_rows():
 
 				num_adv_ma = line[387] #number of advanced mathematics classes
 
-				ap_ind = line[491] #AP indicator: does this student have any students in AP programs?
+				ap_ind = line[491] #AP indicator: does this school have any students in AP programs?
 
 				num_ap_c = line[492] #number of different AP courses offered
 
@@ -56,8 +67,18 @@ def get_crdc_rows():
 				har_bul_sex_o = line[1330] #allegations of harrassment or bullying on the basis of sexual orientation
 				har_bul_rel = line[1331] #allegations of harrassment or bullying on the basis of religion
 
+				if district_state_name in ne:
+					region = "ne"
+				elif district_state_name in se:
+					region = "se"
+				elif district_state_name in ce:
+					region = "ce"
+				else:
+					region = "we"
+
 				row = [ \
 					district_state_abbrev, \
+					district_state_name, \
 					district_id, \
 					district_name, \
 					school_id, \
@@ -88,7 +109,8 @@ def get_crdc_rows():
 					har_bul_race, \
 					har_bul_dis, \
 					har_bul_sex_o, \
-					har_bul_rel \
+					har_bul_rel, \
+					region
 				]
 				processed_data.append(row)
 		return processed_data
