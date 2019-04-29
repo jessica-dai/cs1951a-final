@@ -12,8 +12,8 @@ from sklearn.tree import DecisionTreeClassifier
 # "preprocess" using train test split
 
 def preprocess(dataset):
-    X = dataset[:-1]
-    y = dataset[-1]
+    X = dataset[:,:-1]
+    y = dataset[:,-1]
 
     X_train, X_test, y_train, y_test = train_test_split(X, y)
     return X_train, X_test, y_train, y_test

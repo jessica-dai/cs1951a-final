@@ -96,6 +96,12 @@ for line in read_data:
 
 conn.close()
 
+def add_new_classes():
+    for line in processed_data:
+        line.append(4*(int(urb)-1) + int(region))
+    
+    return np.array(processed_data)
+
 # print(len(processed_data)) # = 1510 -- we removed 17 records
 # print(len(processed_data[0])) # = 9 -- 0: ID, 1-3: joinable attributes, 4-7: response variables
 
