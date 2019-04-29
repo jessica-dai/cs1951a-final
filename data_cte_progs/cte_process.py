@@ -96,11 +96,41 @@ for line in read_data:
 
 conn.close()
 
-def add_new_classes():
+def add_cross_class():
+    model_data = []
     for line in processed_data:
-        line.append(4*(int(urb)-1) + int(region))
+        ex = line[4:]
+        clss = int(4*(int(line[2])-1) + int(line[3]))
+        # print(clss)
+        ex.append(clss)
+        model_data.append(ex)
     
-    return np.array(processed_data)
+    model_data = np.array(model_data)
+    return model_data
+
+def region():
+    model_data = []
+    for line in processed_data:
+        ex = line[4:]
+        clss = int(line[3])
+        # print(clss)
+        ex.append(clss)
+        model_data.append(ex)
+    
+    model_data = np.array(model_data)
+    return model_data
+    
+def u_type():
+    model_data = []
+    for line in processed_data:
+        ex = line[4:]
+        clss = int(line[2])
+        # print(clss)
+        ex.append(clss)
+        model_data.append(ex)
+    
+    model_data = np.array(model_data)
+    return model_data
 
 # print(len(processed_data)) # = 1510 -- we removed 17 records
 # print(len(processed_data[0])) # = 9 -- 0: ID, 1-3: joinable attributes, 4-7: response variables
