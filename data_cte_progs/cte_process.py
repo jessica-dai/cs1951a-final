@@ -80,8 +80,8 @@ for line in read_data:
         processed_data.append(dist_data)
 
         # ADD TO SQL DATABASE
-        x = add_data(cur, dist_data[1:])
-        print(x)
+        # x = add_data(cur, dist_data[1:])
+        # print(x)
 
         # count nulls (zero nulls for prog_qual, barriers_providing, barriers_participation)
         if (resources_adding == 0):
@@ -95,6 +95,7 @@ for line in read_data:
 
 
 conn.close()
+
 # print(len(processed_data)) # = 1510 -- we removed 17 records
 # print(len(processed_data[0])) # = 9 -- 0: ID, 1-3: joinable attributes, 4-7: response variables
 
