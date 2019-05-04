@@ -48,8 +48,8 @@ def main():
 
     for ans_set in ans_sets:
 
-        print("priors:")
-        print(priors(ans_set))
+        # print("priors:")
+        # print(priors(ans_set))
 
         X_train, X_test, y_train, y_test = preprocess(ans_set)
 

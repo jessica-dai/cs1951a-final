@@ -132,6 +132,25 @@ def u_type():
     model_data = np.array(model_data)
     return model_data
 
+def get_reg(reg):
+    model_data = []
+
+    for line in processed_data: 
+        if int(line[3]) == reg:
+            model_data.append(line[4])
+    return np.array(model_data)
+
+def get_u_type(urb):
+    model_data = []
+
+    for line in processed_data: 
+        if int(line[2]) == urb:
+            model_data.append(line[4])
+    return np.array(model_data)
+
+def get_conditionals(cond, attr):
+    pass
+
 # print(len(processed_data)) # = 1510 -- we removed 17 records
 # print(len(processed_data[0])) # = 9 -- 0: ID, 1-3: joinable attributes, 4-7: response variables
 
