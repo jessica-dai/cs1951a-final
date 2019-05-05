@@ -1,7 +1,7 @@
 import numpy as np
 import argparse
 from sklearn.model_selection import train_test_split
-from arts_ed_preprocess import get_rows
+from FRSS101.arts_ed_preprocess import get_rows
 
 # imports for models
 from sklearn.linear_model import LogisticRegression
