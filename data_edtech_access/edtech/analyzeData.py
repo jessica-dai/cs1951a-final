@@ -26,7 +26,7 @@ connection = sqlite3.connect("all_data.db")
 cursor = connection.cursor()
 cursor.execute("SELECT edTech.dist_size, edTech.urb, edTech.region, edTech.totalComputers, edTech.training, edTech.integration FROM edTech;")
 results = cursor.fetchall()
-size = []
+sizeA = []
 district = []
 region = []
 training = []
@@ -41,11 +41,12 @@ count6,count7,count8,count9,count10 = 0,0,0,0,0
 count11,count12,count13,count14,count15,count16  = 0,0,0,0,0,0
 #TODO JOIN ON SOME ATTRIBUTES, ALSO TRY USING DECISION TREE AND OTHER CLASSIFIERS
 for r in results:
-    urban1 = r[2]
-    region1 = r[3]
-    computers.append(r[4])
-    training.append(r[5])
-    integration.append(r[6])
+    size = r[0]
+    urban1 = r[1]
+    region1 = r[2]
+    computers.append(r[3])
+    training.append(r[4])
+    integration.append(r[5])
 	#a combined column for everything
     if (urban1 == 1 and region1 == 1):
 	    combined = 1
@@ -128,6 +129,7 @@ for r in results:
 	    averageTraining[15] += r[4]
 	    count16 += 1
     combinedA.append(combined)
+    sizeA.append(size)
     averageComputer = np.array(averageComputer)
     counter = np.array([count1,count2,count3,count4,count5,count6,count7,count8,count9,count10,count11,count12,count13,count14,count15,count16])
 res= np.zeros(len(averageComputer))
@@ -137,24 +139,27 @@ for i in range(0,len(averageComputer)):
     res1[i] = float(averageTraining[i])/float(counter[i])
 objects = np.arange(1,17)
 
+
+# make a bar graph
 plt.bar(objects, res, align='center', alpha=0.5)
 plt.xticks(objects)
 plt.ylabel('Average Number of Computers')
 plt.xlabel('Region 1-16')
 plt.title('Average Computers per Region')
 plt.show()
-    # size.append(r[0])
-    # district.append(r[1])
-    # region.append(r[2])
-    # computers.append(r[3])
-    # training.append(r[4])
-    # integration.append(r[5])
-    # combinedA.append(combined)
+
+
+y = computers
+x = combinedA
+
+plt.scatter(x, y, c='BLUE', alpha=0.5)
+plt.show()
 
 
 #first perform clustering on size, district, region on training and integration => 4 different labels
 #independent variable
-dependentVariables = np.vstack((training,integration,combinedA)).reshape((916, 3))
+dependentVariables = np.vstack((training,integration,computers)).reshape((2970,3))
+print(np.shape(dependentVariables))
 
 X = np.array(list(dependentVariables))
 y = np.array(list(combinedA))
@@ -208,15 +213,27 @@ def plot_clusters(features, clusters, centers):
 		centers: the coordinates of the center for each cluster.
 	"""
 	topics = np.array([x for x in features])
-	topics = np.reshape(topics, (916,3))
-	print(np.shape(topics))
+	topics = np.reshape(topics, (2970,3))
+	training = []
+	integration = []
+	computers = []
+
+	for row in topics[:1500]:
+		training.append(row[0])
+		integration.append(row[1])
+		computers.append(row[2])
+
 	ax = plt.figure().add_subplot(111, projection='3d')
     #why is this not working?
-	ax.scatter(topics[:, 0], topics[:, 1], topics[:, 2], c= 'blue', alpha=0.3) # Plot the documents
+	ax.scatter(list(training), list(integration), list(computers), c= 'blue', alpha=0.3) # Plot the documents
 	#ax.scatter(centers[:, 0], centers[:, 1], centers[:, 2],c='black', alpha=1) # Plot the centers
 	ax.set_xlabel("training")
 	ax.set_ylabel("integration")
-	ax.set_zlabel("class(1-16)")
+	ax.set_zlabel("number of computers")
+	plt.title("Training vs. Integration vs. Number of Computers")
+	# ax.set_xlim3d(0,4)
+	# ax.set_ylim3d(0,4)
+	# ax.set_zlim3d(0,40)
 	plt.tight_layout()
 	plt.show()
 
@@ -246,9 +263,9 @@ def plot_actual(features,labels):
     ax = plt.figure().add_subplot(111, projection='3d')
     ax.scatter(topics[:, 0], topics[:, 1], topics[:, 2], c='Blue', alpha=0.3) # Plot the documents
     ax.scatter(centers[:, 0], centers[:, 1], centers[:, 2],c='black', alpha=1) # Plot the centers
-    ax.set_xlabel("size")
-    ax.set_ylabel("dist")
-    ax.set_zlabel("class(1-16)")
+    ax.set_xlabel("training")
+    ax.set_ylabel("integration")
+    ax.set_zlabel("number of computers")
     plt.tight_layout()
     plt.show()
 
@@ -284,58 +301,6 @@ plot_clusters(X, clusters, centers)
 #  [1.5326087  3.30434783 2.94021739 3.07065217 3.11956522]
 #  [3.36312849 3.18994413 1.8547486  2.6424581  1.96648045]
 #  [3.56521739 3.44293478 3.48913043 3.3423913  3.45380435]]
-
-#TO DO:
-# Try decision tree classifier/neural_network/ Baysean classifier and look at the accuracies
-# chose the classification with the lowest loss
-def classify(classifier):
-		"""
-		Trains a classifier and tests its performance.
-
-		NOTE: since this is an inner function within
-		classify_documents, this function will have access
-		to the variables within the scope of classify_documents,
-		including the train and test data, so we don't need to pass
-		them in as arguments to this function.
-
-		Args:
-			classifier: an sklearn classifier
-		Returns:
-			The score of the classifier on the test data.
-		"""
-		# TODO: fit the classifier on X_train and y_train
-		# and return the score on X_test and y_test
-		classifier.fit(X_train,y_train)
-		return classifier.score(X_test,y_test)
-
-decision_tree = DecisionTreeClassifier(random_state = 0)
-decision_tree_score = classify(decision_tree)
-
-svm = SVC(random_state = 0)
-svm_score = classify(svm)
-
-mlp = MLPClassifier(random_state = 0)
-mlp_score = classify(mlp)
-
-print(decision_tree_score)
-print(svm_score)
-print(mlp_score)
-
-#with training as the dependent variable
-#0.4891304347826087
-#0.6086956521739131
-#0.5434782608695652
-
-#integration as the dependent variable
-# 0.4891304347826087
-#the svm and mlp does better than random guessing
-# 0.6195652173913043
-# 0.6195652173913043
-
-#there is no correlation between number of computers and any of these other attributes
-
-
-#with integration as the dependent variable
 
 
 cursor.close()
