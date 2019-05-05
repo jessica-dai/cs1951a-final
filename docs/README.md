@@ -125,7 +125,7 @@ By our next check-in after Spring Break, we will have finished constructing the 
 
 ### Images
 
-![alt text](https://github.com/jessica-dai/cs1951a-final/tree/master/docs/decision_tree.png "DecisionTree")
+!["DecisionTree](https://github.com/jessica-dai/cs1951a-final/tree/master/docs/decision_tree.png)
 Description: Graph showing accuracies of each of the datasets trained on different models.
 
 Image: avg_cp.png
