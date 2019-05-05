@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Spotify Data Chart</title>
+        <script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+        <style type="text/css">
+            /* No style rules here */
+        </style>
+    </head>
+    <body>
+    <svg width="500" height="400"> </svg>
+    <script>
+    var data = [0.1565863195, 0.1870399621, 0.2487205341, 0.4076531843];
+    var percent = ['16%','19%', '25%', '41%']
+    var svg = d3.select("svg"),
+           width = svg.attr("width"),
+           height = svg.attr("height"),
+           radius = Math.min(width, height) / 2,
+           g = svg.append("g").attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+    var color = d3.scaleOrdinal(['#4daf4a','#377eb8','#ff7f00','#984ea3','#e41a1c']);
+    var labels = ['N.E','S.E','CENT','WEST']
+    var label = d3.arc().outerRadius(radius-10).innerRadius(radius - 60);
+    // Generate the pie
+    var pie = d3.pie();
+    var arc = d3.arc()
+                .innerRadius(0)
+                .outerRadius(radius);
+    var arcs = g.selectAll("arc")
+                .data(pie(data))
+                .enter()
+                .append("g")
+                .attr("class", "arc")
+    arcs.append("path")
+                .attr("fill", function(d, i) {
+                    return color(i);
+                })
+                .attr("d", arc);
+    arcs.append("text")
+        .attr("transform", function(d,i) {
+                return "translate(" + label.centroid(d) + ")";
+        })
+        .text(function(d,i) {
+          return labels[i] + ':' + percent[i]; });
+    svg.append("g")
+       .attr("transform", "translate(" + (width / 2 - 120) + "," + 10 + ")")
+       .append("text")
+       .text("Percent of computers out of total")
+       .attr("class", "title")
+  </script>
+</body>
