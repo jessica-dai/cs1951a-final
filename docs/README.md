@@ -126,22 +126,29 @@ By our next check-in after Spring Break, we will have finished constructing the 
 ### Images
 
 ![DecisionTree](./decision_tree.png)
+
 Description: Graph showing accuracies of each of the datasets trained on different models.
 
 ![Average Computers](./avg_cp.png)
+
 Description: This graph demonstrates that region 13(Rural and Northeast) seems to have a significantly higher ratio of computers for instruction to total computers of around 0.6, which is a strange finding.  All the other 15 classes have ratios of around 0.4. Region 8(Suburban and West) has the lowest ratio.  
 
 ![Average Technology](./avg_tech.png)
+
 Description: There seems to be no correlation between the 16 classes and the average amount of training. 
 
 ![Gender Enrollment](./gd_enr.png)
+
 Description: There seems to be a lower enrollment for districts in the central area and there seems to be greater variance in enrollment size for districts in the West. 
 
 ![Program Quality](./program_qual.png)
+
 Description: Suburban schools seem to have greater variance in program quality score, as shown by the larger amount of schools two standard deviations above the mean. Furthermore, schools in the city had the highest probability of schools above the mean and rural schools had the least. 
 
 ![Pie Chart](./perc_cp.png)
+
 Description: This pie-chart was created with d3 and shows the percentage of computers for each region out of the total number of computers. Because each of the regions might have varying enrollment sizes, district size was used to normalize the ratios. Before normalization, there was greater variance in ratios in the data. The West region has the highest percent of computers in relation to district size and the NorthEast has the least. 
 
 ![Train](./train_vs_int.png)
+
 Description: The darker points represent greater density. The graph was plotted with a sample size of 1500 of the total data points to demonstrate greater clarity. Furthermore, the number of computers  was scaled down by 1/10. The data is clustered towards higher training and integration. There is greater variance among the number of computers, which makes sense because district enrollment sizes also vary. There is highest density in the upper right region, which seems to suggest that higher number of computers implies greater training and integration. 
