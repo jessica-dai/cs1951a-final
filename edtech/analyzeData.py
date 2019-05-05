@@ -16,13 +16,13 @@ from scipy.stats import linregress
 
 import matplotlib.image as mpimg
 
-database = "/Users/rebeccazuo/Desktop/DataScienceFinal/edtech/new_data.db"
+database = "/Users/rebeccazuo/Desktop/cs1951a-final/all_data.db"
 
 numberOfSamples = 1832
 #method that performs kmeans clustering algorithm
 
 
-connection = sqlite3.connect("new_data.db")
+connection = sqlite3.connect("all_data.db")
 cursor = connection.cursor()
 cursor.execute("SELECT edTech.dist_size, edTech.urb, edTech.region, edTech.totalComputers, edTech.training, edTech.integration FROM edTech;")
 results = cursor.fetchall()
@@ -41,11 +41,11 @@ count6,count7,count8,count9,count10 = 0,0,0,0,0
 count11,count12,count13,count14,count15,count16  = 0,0,0,0,0,0
 #TODO JOIN ON SOME ATTRIBUTES, ALSO TRY USING DECISION TREE AND OTHER CLASSIFIERS
 for r in results:
-    urban1 = r[1]
-    region1 = r[2]
-    computers.append(r[3])
-    training.append(r[4])
-    integration.append(r[5])
+    urban1 = r[2]
+    region1 = r[3]
+    computers.append(r[4])
+    training.append(r[5])
+    integration.append(r[6])
 	#a combined column for everything
     if (urban1 == 1 and region1 == 1):
 	    combined = 1
@@ -137,11 +137,11 @@ for i in range(0,len(averageComputer)):
     res1[i] = float(averageTraining[i])/float(counter[i])
 objects = np.arange(1,17)
 
-plt.bar(objects, res1, align='center', alpha=0.5)
+plt.bar(objects, res, align='center', alpha=0.5)
 plt.xticks(objects)
-plt.ylabel('Training on a scale of 0-4')
+plt.ylabel('Average Number of Computers')
 plt.xlabel('Region 1-16')
-plt.title('Average technology training per region')
+plt.title('Average Computers per Region')
 plt.show()
     # size.append(r[0])
     # district.append(r[1])
