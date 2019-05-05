@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Gender Enrollment and Location</title>
+		<link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+		<script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+		<style type="text/css">
+			/* No style rules here */
+		</style>
+	</head>
+	<body>
+		<svg id="svg"></svg>
+		<!--feel free to add style rules or just add styles directly to the d3 components-->
+		<script type="text/javascript">
+			let startOffset = 150;
+			let verticalOffset = 50;
+			let height = 800;
+			let width = 1500;
+			let characteristics = ["Female_Enrollment", "Male_Enrollment"];
+			let color = d3.scaleOrdinal().domain(characteristics);
+			let svg = d3.select("#svg").attr("width", width).attr("height", height).append("g");
+			d3.csv("data_crdc.csv").then(data => {
+				var barHeight = 11;
+				data.forEach(row => {
+					row.Male_Enrollment = parseFloat(row.Male_Enrollment);
+					row.Female_Enrollment = parseFloat(row.Female_Enrollment);
+				});
+				bars = svg.selectAll("rect").data(data).enter();
+				bars.append("rect")
+					.attr("height", barHeight)
+					.attr("width", row => {
+						return row.Male_Enrollment;
+					})
+					.attr("y", (row, i) => {
+						return i * barHeight + verticalOffset;
+					})
+					.attr("stroke-width", 1)
+					.attr("stroke", "black")
+					.attr("x", startOffset)
+					.style("fill", "#8762ba");
+				bars.append("rect")
+					.attr("height", barHeight)
+					.attr("width", row => {
+						return row.Female_Enrollment;
+					})
+					.attr("y", (d, i) => {
+						return i * barHeight + verticalOffset;
+					})
+					.attr("stroke-width", 1)
+					.attr("stroke", "black")
+					.attr("x", startOffset)
+					.style("fill", "#43aac1");
+				bars.append("text")
+					.text(row => {
+                        if (parseFloat(row.Region) === 0) {
+                            return "Northeast"
+                        } else if (parseFloat(row.Region) === 1) {
+                            return "Southeast"
+                        } else if (parseFloat(row.Region) === 2) {
+                            return "Central"
+                        } else {
+                            return "West";
+                        }
+						// return row.Region;
+					})
+					.attr("x", row => {
+						return 0;
+					})
+					.attr("y", (row, i) => {
+						return barHeight * (i + 0.8) + verticalOffset;
+					})
+                    .attr("font-family", "\"Quicksand\", sans-serif")
+                    .style("font-size", "10px");;
+				bars.append("text")
+					.text(row => {
+						return row.Female_Enrollment;
+					})
+					.attr("x", row => {
+						return startOffset - 50;
+					})
+					.attr("y", (row, i) => {
+						return barHeight * (i + 0.8) + verticalOffset;
+					})
+                    .attr("font-family", "\"Quicksand\", sans-serif")
+                    .style("font-size", "10px");;
+				bars.append("text")
+					.text( row => {
+						return row.Male_Enrollment;
+					})
+					.attr("x", row => {
+                        if (row.Male_Enrollment > row.Female_Enrollment) {
+                            return startOffset + row.Male_Enrollment + 10;
+                        } else {
+                            return startOffset + row.Female_Enrollment + 10;
+                        }
+					})
+					.attr("y", (row, i) => {
+						return barHeight * (i + 0.8) + verticalOffset;
+					})
+                    .attr("font-family", "\"Quicksand\", sans-serif")
+                    .style("font-size", "10px");
+				svg.append("text")
+					.attr("x", width / 2)
+					.attr("y", 30)
+					.attr("text-anchor", "middle")
+					.attr("font-family", "\"Quicksand\", sans-serif")
+					.style("font-size", "20px")
+                    .text("Gender Enrollment and Location");
+                svg.append("text")
+					.attr("x", width - 500)
+					.attr("y", height - 100)
+					.attr("text-anchor", "middle")
+					.attr("font-family", "\"Quicksand\", sans-serif")
+					.style("font-size", "20px")
+					.text("Blue bars represent female enrollment, while purple bars represent male enrollment");
+			});
+		</script>
+	</body>
+</html>
