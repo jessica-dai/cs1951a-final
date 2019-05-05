@@ -1,4 +1,63 @@
 # data science blog final
+
+## Final Blog Post (5/4/19)
+
+### Vision
+
+From our knowledge about public school funding, we thought there might be some correlation between demographics of a school -- in particular, the percentages of low-income  and students of color -- and the types and quality of extracurricular opportunities it provides. However, we found it difficult to find the correlation between demographics and school resources because of the lack of joinable attributes among the four datasets. Thus, we decided instead to predict the geographic region and community type based on various attributes from each of the datasets. While we didn’t explicitly follow our initial plans for this project, we still gleaned interesting information in this general topic area -- that is, that there do exist some relationships between school location within the US (northeast, southeast, central, west) and school community type (urban, suburban, town, rural), and the types of opportunities that are offered -- and furthermore, that these relationships are conditional on both location and community type. 
+
+### DATA
+
+We chose to examine four different data sets from data.gov, which included one on Arts education, one on Demographics and school resources (CRDC), one on Education Technology resources, and one on Career and Technical Education programs. The data varied in sizes; the largest dataset was the Demographics and school resources dataset, with over thousands of samples. The Education Technology and Arts datasets were much smaller. 
+We were able to find distinct correlations between the datasets themselves, but we were not able to find correlations across datasets (explained more below). For preprocessing, we each individually went through our datasets and only saved the data that was relevant to our study. For example, the CRDC dataset included samples of private schools, boarding schools, and elementary schools, but we only wanted the data regarding public high schools. 
+We struggled in finding a way to integrate our data; we considered joining them on what we thought were common attributes within the datasets, but we were not confident that the attributes were similar enough.  We ended up deciding to do something different, which is then explained more below.
+
+
+### Methodology
+At the beginning of the project, we hoped to be able to predict the demographics of a school given knowledge about its extracurricular programs, or vice versa. This required having complete information for each datapoint (i.e. each school), meaning that we would have had to been able to claim that the information contained in the arts dataset for a given school corresponded directly to information we could identify in the CTE program dataset for the same school. After working more with the individual datasets, we realized this would be impossible, given that all of our datasets were from separate surveys, conducted at different times, and hence did not survey the exact same schools and in fact had anonymized all entries. 
+
+We then tried to find any general patterns or relationships at all within each dataset by running simple SQL queries to our database (for example, counting the number of entries with particular attributes) and checking whether those numbers suggested any correlation. This also proved difficult, especially because we wanted to be able to integrate insights from all datasets at a time. 
+
+The factors and attributes that were common among all datasets was school region (northeast, southeast, central, and west) and community type (urban, suburban, town, and rural). The only dataset that didn’t have both was the CRDC dataset, which still collected information about school location (state), from which we could infer region. 
+
+Given this, we decided to see whether we could predict region and community type based on information from a single dataset; then, to be able to combine information from all datasets, we would combine the best models for each dataset to make a final prediction. This therefore elides the issue of having to create “fake” or untrue data by joining entries across datasets. 
+
+### Model design
+For each dataset, there are a total of 16 possible classifications -- every possible combination of location and community type. The only exception is the CRDC dataset, with 4 possible classifications (just location). The classifications we used were as followed: 
+
+1 -- city & northeast
+2 -- city & southeast 
+3 -- city & central
+4 -- city & west
+5 -- surburban & northeast
+6 -- suburban & southeast
+7 -- suburban & central
+8 -- suburban & west
+9 -- town & northeast
+10 -- town & southeast
+11 -- town & central
+12 -- town & west
+13 -- rural & northeast
+14 -- rural & southeast
+15 -- rural & central
+16 -- rural & west 
+
+Then, for each dataset, we train 5 of scikit-learn’s pre-implemented models: logistic regression, naive bayes (using the Bernoulli model), a neural network (using the multi-layer perceptron classifier), a SVM (using the linear SVC), and a decision tree. We use scikit-learn’s built-in train test split method, with default parameters of 75% training and 25% testing data.
+
+The final predictive model is a vote of these five models, weighted by their accuracy.  The final prediction presumes we have information about the school’s demographics, arts, CTE, and edtech programs; then, we feed the relevant pieces of data to each separate model, 
+
+The reason we chose to predict location and community type together, rather than separately, is that interestingly enough, the models perform better when predicting both at the same time than one by one. For instance, with the CTE dataset, predicting one at a time resulted in models that performed an average of 1.2x as good as guessing; predicting both together, however,  resulted in models that performed an average of 1.75x as good as guessing. These results validate our choice of using 16 classifications rather than 4, when possible. 
+
+We recognize a glaring issue is the inability to test the final predictor for how well it does (for the very reason we chose to shift our strategy in the first place); that being said, this is the best we could do given our data, and in particular we actually end up performing much better than we thought we would (see below). 
+
+Visualization, both for the preliminary exploration phase and for the modelling and result-generating phase, was done primarily via matplotlib, mostly because it was easiest and flexible to do so while working with numpy arrays in python. Additionally, d3 was used to make graphs that could be made interactive. 
+
+### Results 
+
+After training and testing our models, we found better-than-guessing correlations for each dataset. The probability of finding the correct classification for each dataset just by guessing would be 1nwhere n is the number of classifications. For the Arts, Technology, and Career datasets, we had 16 different classifications: 4 classifications describing location (Northeast, Southeast, West, Central)  and 4 classifications describing how developed the environment was. For the CRDC dataset, there were 4 classifications describing location, as there was no information given about how developed the school’s environment was. 
+
+Our model accuracies are not the greatest, with the best accuracy being around 20%. However, the models are still meaningfully better than random guessing. The Arts dataset consistently yielded an accuracy around 3x better than random guessing, and each dataset had at least one model perform at least twice as well as random guessing. This could possible be the case because there were many attributes among the Arts dataset and the best combination of features was chosen to train the model. 
+
 
 ## blog post 1 -- 3/15/19
 
