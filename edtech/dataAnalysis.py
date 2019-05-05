@@ -12,9 +12,6 @@ from sklearn.tree import DecisionTreeClassifier
 
 database = "/Users/rebeccazuo/Desktop/DataScienceFinal/edtech/new_data.db"
 
-numberOfSamples = 1832
-#method that performs kmeans clustering algorithm
-
 
 connection = sqlite3.connect("new_data.db")
 cursor = connection.cursor()
@@ -26,45 +23,14 @@ combinedA =[]
 #TODO JOIN ON SOME ATTRIBUTES, ALSO TRY USING DECISION TREE AND OTHER CLASSIFIERS
 
 for r in results:
-    dist_size = r[0]
-    urban1 = r[1]
-    region1 = r[2]
-    totalComputers = r[3]
-    training = r[4]
-    integration = r[5]
-	#a combined column for everything
-    if (urban1 == 1 and region1 == 1):
-	    combined = 1
-    if(urban1 == 1 and region1 == 2):
-	    combined = 2
-    if(urban1 == 1 and region1 == 3):
-	    combined = 3
-    if(urban1 == 1 and region1 == 4):
-	    combined = 4
-    if(urban1 == 2 and region1 == 1):
-	    combined = 5
-    if(urban1 == 2 and region1 == 2):
-	    combined = 6
-    if(urban1 == 2 and region1 == 3):
-	    combined = 7
-    if(urban1 == 2 and region1 == 4):
-	    combined = 8
-    if(urban1 == 3 and region1 == 1):
-	    combined = 9
-    if(urban1 == 3 and region1 == 2):
-	    combined = 10
-    if(urban1 == 3 and region1 == 3):
-	    combined = 11
-    if(urban1 == 3 and region1 == 4):
-	    combined = 12
-    if(urban1 == 4 and region1 == 1):
-	    combined = 13
-    if(urban1 == 4 and region1 == 2):
-	    combined = 14
-    if(urban1 == 4 and region1 == 3):
-	    combined = 15
-    if(urban1 == 4 and region1 == 4):
-	    combined = 16
+    combined = r[0]
+    dist_size = r[1]
+    urban1 = r[2]
+    region1 = r[3]
+    totalComputers = r[4]
+    training = r[5]
+    integration = r[6]
+
     temp = [totalComputers, training,integration,combined]
     combinedA.append(temp)
 combinedA = np.array(combinedA)
